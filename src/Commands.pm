@@ -4703,6 +4703,11 @@ sub cmdStorage_gettocart {
 	if (!defined($amount) || $amount > $item->{amount}) {
 		$amount = $item->{amount};
 	}
+	
+	if ($char->statusesString =~ /.*?Cart.*?/ig) {
+		error TF("Cart wasn't found.\n")
+	}
+	
 	$messageSender->sendStorageGetToCart($item->{index}, $amount);
 }
 
