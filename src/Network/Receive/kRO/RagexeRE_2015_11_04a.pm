@@ -17,6 +17,43 @@ package Network::Receive::kRO::RagexeRE_2015_11_04a;
 use strict;
 use base qw(Network::Receive::kRO::RagexeRE_2015_05_13a);
 
+sub new {
+	my ($class) = @_;
+	my $self = $class->SUPER::new(@_);
+	
+	my %packets = (
+		'09CB' => ['skill_used_no_damage', 'v2 v a4 a4 C', [qw(skillID lv amount targetID sourceID success)]],
+#		'09CB' => ['skill_used_no_damage', 'v2 a4 a4 C', [qw(skillID amount targetID sourceID success)]], # 17
+		'0A0D' => ['skill_used_no_damage', 'v2 a4 a4 C', [qw(skillID amount targetID sourceID success)]], # Just In case for 0A0D
+#		'0A0D' => ['inventory_items_nonstackable', 'v a*', [qw(len itemInfo)]],
+		'0A09' => ['deal_add_other', 'v C V C3 a8 a25', [qw(nameID type amount identified broken upgrade cards options)]],
+		'0A0A' => ['storage_item_added', 'v V v C4 a8 a25', [qw(index amount nameID type identified broken upgrade cards options)]],
+		'0A0B' => ['cart_item_added', 'v V v C4 a8 a25', [qw(index amount nameID type identified broken upgrade cards options)]],
+		'0A0C' => ['inventory_item_added', 'v3 C3 a8 V C2 a4 v a25', [qw(index amount nameID identified broken upgrade cards type_equip type fail expire unknown options)]],
+		'0A0F' => ['cart_items_nonstackable', 'v a*', [qw(len itemInfo)]],
+		'0A10' => ['storage_items_nonstackable', 'v Z24 a*', [qw(len title itemInfo)]],
+		'0A2D' => ['character_equip', 'v Z24 x17 a*', [qw(len name itemInfo)]],
+		'09FD' => ['actor_moved', 'v C a4 a4 v3 V v5 a4 v6 a4 a2 v V C2 a6 C2 v2 a9 Z*', [qw(len object_type ID charID walk_speed opt1 opt2 option type hair_style weapon shield lowhead tick tophead midhead hair_color clothes_color head_dir costume guildID emblemID manner opt3 stance sex coords xSize ySize lv font opt4 name)]],
+		'09FE' => ['actor_connected', 'v C a4 a4 v3 V v11 a4 a2 v V C2 a3 C2 v2 a9 Z*', [qw(len object_type ID charID walk_speed opt1 opt2 option type hair_style weapon shield lowhead tophead midhead hair_color clothes_color head_dir costume guildID emblemID manner opt3 stance sex coords xSize ySize lv font opt4 name)]],
+		'09FF' => ['actor_exists', 'v C a4 a4 v3 V v11 a4 a2 v V C2 a3 C3 v2 a9 Z*', [qw(len object_type ID charID walk_speed opt1 opt2 option type hair_style weapon shield lowhead tophead midhead hair_color clothes_color head_dir costume guildID emblemID manner opt3 stance sex coords xSize ySize act lv font opt4 name)]],
+		'0A00' => ['hotkeys'],
+#		'022B' => ['actor_connected', 'v C a4 v3 V v11 a4 a2 v V C2 a3 C2 v2 a9 Z*', [qw(len object_type ID walk_speed opt1 opt2 option type hair_style weapon shield lowhead tophead midhead hair_color clothes_color head_dir costume guildID emblemID manner opt3 stance sex coords xSize ySize lv font opt4 name)]],
+#		'022C' => ['actor_moved', 'v C a4 v3 V v5 a4 v6 a4 a2 v V C2 a6 C2 v2 a9 Z*', [qw(len object_type ID walk_speed opt1 opt2 option type hair_style weapon shield lowhead tick tophead midhead hair_color clothes_color head_dir costume guildID emblemID manner opt3 stance sex coords xSize ySize lv font opt4 name)]],
+#		'022A' => ['actor_exists', 'v C a4 v3 V v11 a4 a2 v V C2 a3 C3 v2 a9 Z*', [qw(len object_type ID walk_speed opt1 opt2 option type hair_style weapon shield lowhead tophead midhead hair_color clothes_color head_dir costume guildID emblemID manner opt3 stance sex coords xSize ySize act lv font opt4 name)]],
+		'0983' => ['actor_status_active', 'v a4 C', [qw(type ID flag)]],
+		'0984' => ['actor_status_active', 'v a4 C', [qw(type ID flag)]],
+		'0086' => ['actor_display', 'a4 a6 V', [qw(ID coords tick)]],
+		'008E' => ['self_chat', 'x2 Z*', [qw(message)]],
+		'01F3' => ['misc_effect', 'a4 V', [qw(ID effect)]], # weather/misceffect2 packet
+		'008A' => ['actor_action', 'a4 a4 a4 V2 v2 C v', [qw(sourceID targetID tick src_speed dst_speed damage div type dual_wield_damage)]],
+
+	);
+
+	foreach my $switch (keys %packets) { $self->{packet_list}{$switch} = $packets{$switch}; }
+
+	return $self;
+}
+
 1;
 
 =pod
