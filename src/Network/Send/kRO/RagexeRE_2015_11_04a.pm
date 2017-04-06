@@ -20,26 +20,27 @@ sub new {
 	my $self = $class->SUPER::new(@_);
 	
 	my %packets = (
-#		'0369' => ['actor_action', 'a4 C', [qw(targetID type)]],
+		'0369' => ['actor_action', 'a4 C', [qw(targetID type)]],
 		'0887' => ['actor_info_request', 'a4', [qw(ID)]],
 		'0928' => ['actor_look_at', 'v C', [qw(head body)]],
-#		'0368' => ['actor_name_request', 'a4', [qw(ID)]],
-		'0363' => undef, #old map_login
+		'0368' => ['actor_name_request', 'a4', [qw(ID)]],
+#		'0363' => undef, #old map_login
 		'0363' => ['character_move','a3', [qw(coords)]],
 		'07EC' => ['friend_request', 'a*', [qw(username)]],# len 26
 		'088D' => ['homunculus_command', 'v C', [qw(commandType, commandID)]], #f
-		'0437' => undef,
+#		'0437' => undef,
 		'0437' => ['item_drop', 'v2', [qw(index amount)]],
 		'0964' => ['item_take', 'a4', [qw(ID)]],
 		'0360' => ['map_login', 'a4 a4 a4 V C', [qw(accountID charID sessionID tick sex)]],
 		'08A5' => ['party_join_request_by_name', 'Z24', [qw(partyName)]], #f
-#		'083C' => ['skill_use', 'v2 a4', [qw(lv skillID targetID)]],
-#		'0438' => ['skill_use_location', 'v4', [qw(lv skillID x y)]],#
+		'083C' => ['skill_use', 'v2 a4', [qw(lv skillID targetID)]],
+		'0438' => ['skill_use_location', 'v4', [qw(lv skillID x y)]],#
 		'088B' => ['storage_item_add', 'v V', [qw(index amount)]],
-#		'0364' => ['storage_item_remove', 'v V', [qw(index amount)]],
+		'0364' => ['storage_item_remove', 'v V', [qw(index amount)]],
 		'0886' => ['sync', 'V', [qw(time)]],
-#		'093A' => ['item_list_res', 'v V2 a*', [qw(len type action itemInfo)]],
+		'093A' => ['item_list_res', 'v V2 a*', [qw(len type action itemInfo)]],
 		'0940' => ['storage_password'],
+		'023B' => ['open_buying_store', 'c', [qw(amount)]],
 	);
 	
 	$self->{packet_list}{$_} = $packets{$_} for keys %packets;
@@ -48,7 +49,7 @@ sub new {
 		actor_action 0369
 		actor_info_request 0887
 		actor_look_at 0928
-		actor_name_request 0338
+		actor_name_request 0368
 		character_move 0363
 		friend_request 07EC
 		homunculus_command 088D
@@ -62,6 +63,8 @@ sub new {
 		storage_item_remove 0364
 		sync 0886
 		storage_password 0940
+		item_list_res 093A
+		open_buying_store 023B
 	);
 	
 	while (my ($k, $v) = each %packets) { $handlers{$v->[0]} = $k}
